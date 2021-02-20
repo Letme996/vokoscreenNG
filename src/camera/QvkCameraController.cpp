@@ -21,10 +21,13 @@
  */
 
 #include "QvkCameraController.h"
+#include "QvkCameraResolution.h"
 #include "global.h"
+#include "camerasettingsdialog.h"
 
-QvkCameraController::QvkCameraController( Ui_formMainWindow *ui_surface ):cameraWatcher(new QvkCameraWatcher()),
-                                                                          videoSurface(new QvkVideoSurface())
+#include <QCameraInfo>
+
+QvkCameraController::QvkCameraController( Ui_formMainWindow *ui_surface ):videoSurface(new QvkVideoSurface())
 {
     ui_formMainWindow = ui_surface;
 
@@ -38,23 +41,29 @@ QvkCameraController::QvkCameraController( Ui_formMainWindow *ui_surface ):camera
     sliderCameraWindowSize->setShowValue( false );
     sliderCameraWindowSize->setEnabled( false );
 
-    cameraWindow = new QvkCameraWindow( ui_surface, sliderCameraWindowSize );
+    vkCameraSettingsDialog = new cameraSettingsDialog;
+
+    QvkCameraResolution *vkCameraResolution = new QvkCameraResolution( ui_formMainWindow, vkCameraSettingsDialog );
+    connect( ui_formMainWindow->comboBoxCamera, SIGNAL( currentIndexChanged( int ) ), vkCameraResolution, SLOT( slot_resolution( int ) ) );
+    connect( ui_formMainWindow->comboBoxCameraResolution, SIGNAL( currentIndexChanged( int ) ), this, SLOT( slot_resolutionChanged() ) );
+
+    getAllDevices();
+
+    cameraWindow = new QvkCameraWindow( ui_surface, sliderCameraWindowSize, vkCameraSettingsDialog );
     cameraWindow->hide();
     connect( cameraWindow, SIGNAL( signal_cameraWindow_close( bool ) ), ui_formMainWindow->checkBoxCameraOnOff, SLOT( setChecked( bool ) ) );
     cameraWindow->setWindowTitle( QString( tr( "Camera") ) );
     QIcon icon( QString::fromUtf8( ":/pictures/logo/logo.png" ) );
     cameraWindow->setWindowIcon( icon );
 
-    connect( cameraWatcher, SIGNAL( signal_addedCamera( QString, QString ) ), this, SLOT( slot_addedCamera( QString, QString ) ) );
-    connect( cameraWatcher, SIGNAL( signal_removedCamera( QString) ),         this, SLOT( slot_removedCamera( QString ) ) );
-    cameraWatcher->cameraWatcherInit();
-    connect( ui_formMainWindow->checkBoxCameraOnOff, SIGNAL( toggled( bool ) ), ui_formMainWindow->comboBoxCamera, SLOT( setDisabled( bool ) ) );
+    QvkCameraWatcher *cameraWatcher = new QvkCameraWatcher( ui_formMainWindow );
 
-#ifdef Q_OS_WIN
-    connect( ui_formMainWindow->checkBoxCameraOnOff, SIGNAL( toggled( bool ) ), cameraWatcher, SLOT( slot_startStopCameraTimer( bool ) ) );
-#endif
+    connect( cameraWatcher, SIGNAL( signal_addedCamera(   QString, QString ) ), this, SLOT( slot_addedCamera( QString, QString ) ) );
+    connect( cameraWatcher, SIGNAL( signal_removedCamera( QString ) ),          this, SLOT( slot_removedCamera( QString ) ) );
+
+    connect( ui_formMainWindow->checkBoxCameraOnOff, SIGNAL( toggled( bool ) ), ui_formMainWindow->comboBoxCamera, SLOT( setDisabled( bool ) ) );
     connect( ui_formMainWindow->checkBoxCameraOnOff, SIGNAL( toggled( bool ) ), this, SLOT( slot_startCamera( bool ) ) );
-    connect( ui_formMainWindow->checkBoxCameraOnOff, SIGNAL( toggled( bool ) ), ui_formMainWindow->checkBoxCameraWindowFrame, SLOT( setEnabled(bool ) ) );
+    connect( ui_formMainWindow->checkBoxCameraOnOff, SIGNAL( toggled( bool ) ), ui_formMainWindow->checkBoxCameraWindowFrame, SLOT( setEnabled( bool ) ) );
 
     connect( videoSurface, SIGNAL( signal_newPicture( QImage ) ), this, SLOT( slot_setNewImage( QImage ) ) );
 
@@ -69,18 +78,55 @@ QvkCameraController::~QvkCameraController()
 }
 
 
+void QvkCameraController::slot_resolutionChanged()
+{
+    if ( ui_formMainWindow->checkBoxCameraOnOff->checkState() == Qt::Checked )
+    {
+        ui_formMainWindow->checkBoxCameraOnOff->click();
+        ui_formMainWindow->checkBoxCameraOnOff->click();
+
+        if ( vkCameraSettingsDialog->isVisible() == true )
+        {
+            vkCameraSettingsDialog->close();
+            vkCameraSettingsDialog->show();
+        }
+    }
+}
+
+
+void QvkCameraController::getAllDevices()
+{
+    QList<QCameraInfo> camerasInfoList = QCameraInfo::availableCameras();
+    if ( !camerasInfoList.empty() )
+    {
+        for ( int i = 0; i < camerasInfoList.count(); i++ )
+        {
+            if ( ( camerasInfoList.at(i).description() > "" ) and ( !camerasInfoList.at(i).description().contains( "@device:pnp" ) ) )
+            {
+               qDebug().noquote() << global::nameOutput << "[Camera] Found:" << camerasInfoList.at(i).description() << camerasInfoList.at(i).deviceName();
+               slot_addedCamera( camerasInfoList.at(i).description(), camerasInfoList.at(i).deviceName() );
+            }
+        }
+    }
+}
+
+
 void QvkCameraController::slot_frameOnOff( bool value )
 {
     if ( cameraWindow->isVisible() == true )
     {
+        Qt::WindowFlags flags = 0;
+
         if ( value == true )
         {
-            cameraWindow->setWindowFlags( Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint );
+            flags = Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint;
+            cameraWindow->setWindowFlags( flags );
         }
 
         if ( value == false )
         {
-            cameraWindow->setWindowFlags( Qt::Window | Qt::WindowStaysOnTopHint );
+            flags = Qt::Window | Qt::WindowStaysOnTopHint;
+            cameraWindow->setWindowFlags( flags );
         }
 
         cameraWindow->show();
@@ -102,18 +148,28 @@ void QvkCameraController::slot_sliderMoved( int value )
 
     if ( value == 3 )
     {
-        cameraWindow->resize( 640, 480 );
+        cameraWindow->resize( 639, 479 );
     }
 }
 
 
 void QvkCameraController::slot_setNewImage( QImage image )
 {
+#ifdef Q_OS_LINUX
     if ( ui_formMainWindow->checkBoxCameraMirrorHorizontal->isChecked() == true )
         image = image.mirrored( true, false );
 
-    if ( ui_formMainWindow->checkBoxCameraMirrorVertical->isChecked() == true  )
+    if ( ui_formMainWindow->checkBoxCameraMirrorVertical->isChecked() == true )
         image = image.mirrored( false, true );
+#endif
+
+#ifdef Q_OS_WIN
+    if ( ui_formMainWindow->checkBoxCameraMirrorHorizontal->isChecked() == true )
+        image = image.mirrored( true, false );
+
+    if ( ui_formMainWindow->checkBoxCameraMirrorVertical->isChecked() == false )
+        image = image.mirrored( false, true );
+#endif
 
     if ( ui_formMainWindow->checkBoxCameraInvert->isChecked() == true )
         image.invertPixels( QImage::InvertRgb );
@@ -134,9 +190,6 @@ void QvkCameraController::slot_addedCamera( QString description, QString device 
     ui_formMainWindow->checkBoxCameraOnOff->setEnabled( true );
     ui_formMainWindow->comboBoxCamera->setEnabled( true );
     ui_formMainWindow->comboBoxCamera->addItem( description, device.toLatin1() );
-
-    ui_formMainWindow->checkBoxCameraOnOff->setEnabled( true );
-    ui_formMainWindow->comboBoxCamera->setEnabled( true );
     ui_formMainWindow->checkBoxCameraGray->setEnabled( true );
     ui_formMainWindow->checkBoxCameraInvert->setEnabled( true );
     ui_formMainWindow->checkBoxCameraMirrorHorizontal->setEnabled( true );
@@ -151,7 +204,7 @@ void QvkCameraController::slot_addedCamera( QString description, QString device 
 
 void QvkCameraController::slot_removedCamera( QString device )
 {
-    if ( ( ui_formMainWindow->checkBoxCameraOnOff->isChecked() == true ) and ( ui_formMainWindow->comboBoxCamera->currentData() == device.toLatin1() ) )
+    if ( ( ui_formMainWindow->checkBoxCameraOnOff->isChecked() == true ) and ( ui_formMainWindow->comboBoxCamera->currentData().toString() == device ) )
     {
         cameraWindow->close();
     }
@@ -163,6 +216,7 @@ void QvkCameraController::slot_removedCamera( QString device )
     {
         ui_formMainWindow->checkBoxCameraOnOff->setEnabled( false );
         ui_formMainWindow->comboBoxCamera->setEnabled( false );
+        ui_formMainWindow->comboBoxCameraResolution->clear();
         ui_formMainWindow->checkBoxCameraGray->setEnabled( false );
         ui_formMainWindow->checkBoxCameraInvert->setEnabled( false );
         ui_formMainWindow->checkBoxCameraMirrorHorizontal->setEnabled( false );
@@ -186,9 +240,12 @@ void QvkCameraController::slot_startCamera( bool value )
         camera->setCaptureMode( QCamera::CaptureViewfinder );
         connect( camera, SIGNAL( statusChanged( QCamera::Status ) ), this, SLOT( slot_statusChanged( QCamera::Status ) ) );
         connect( camera, SIGNAL( stateChanged( QCamera::State   ) ), this, SLOT( slot_stateChanged( QCamera::State ) )  );
+        connect( camera, QOverload<QCamera::Error>::of( &QCamera::error ), this, [=]( QCamera::Error value ){ slot_error( value ); });
 
+        int frameWidth = ui_formMainWindow->comboBoxCameraResolution->currentText().section( "x", 0, 0 ).toInt();
+        int frameHeight = ui_formMainWindow->comboBoxCameraResolution->currentText().section( "x", 1, 1 ).toInt();
         QCameraViewfinderSettings viewfinderSettings;
-        viewfinderSettings.setResolution( 640, 480 );
+        viewfinderSettings.setResolution( frameWidth, frameHeight );
         viewfinderSettings.setMinimumFrameRate( 0.0 );
         viewfinderSettings.setMaximumFrameRate( 0.0 );
         camera->setViewfinderSettings( viewfinderSettings );
@@ -196,6 +253,7 @@ void QvkCameraController::slot_startCamera( bool value )
         slot_sliderMoved( sliderCameraWindowSize->value() );
 
         camera->setViewfinder( videoSurface );
+        cameraWindow->setStyleSheet( "background-color:black;" );
         cameraWindow->show();
 #ifdef Q_OS_LINUX
         camera->load();
@@ -240,9 +298,9 @@ void QvkCameraController::slot_stateChanged( QCamera::State state )
 {
     switch ( state )
     {
-      case QCamera::UnloadedState : { qDebug().noquote() << global::nameOutput << state; break;  };// 0
-      case QCamera::LoadedState   : { qDebug().noquote() << global::nameOutput << state; break;  };// 1
-      case QCamera::ActiveState   : { qDebug().noquote() << global::nameOutput << state; break;  };// 2
+      case QCamera::UnloadedState : { qDebug().noquote() << global::nameOutput << state; break;  }// 0
+      case QCamera::LoadedState   : { qDebug().noquote() << global::nameOutput << state; break;  }// 1
+      case QCamera::ActiveState   : { qDebug().noquote() << global::nameOutput << state; break;  }// 2
     }
 }
 
@@ -257,23 +315,26 @@ void QvkCameraController::slot_error( QCamera::Error error )
     }
     case QCamera::CameraError:
     {
-        qDebug() <<  "QCamera" << "General Camera error";
+        qDebug().noquote() << global::nameOutput << "General Camera error";
+        cameraWindow->clear();
+        cameraWindow->setStyleSheet( "background-color:white;" );
+        cameraWindow->setText( "Camera is busy " );
         break;
     }
     case QCamera::InvalidRequestError:
     {
-        qDebug() <<  "QCamera" << "Camera invalid request error";
+        qDebug().noquote() << global::nameOutput << "Camera invalid request error";
         break;
     }
     case QCamera::ServiceMissingError:
     {
-        qDebug() << "QCamera" <<  "Camera service missing error";
+        qDebug().noquote() << global::nameOutput << "Camera service missing error";
         break;
     }
     case QCamera::NotSupportedFeatureError :
     {
-        qDebug() << "QCamera" << "Camera not supported error";
+        qDebug().noquote() << global::nameOutput << "Camera not supported error";
         break;
     }
-    };
+    }
 }

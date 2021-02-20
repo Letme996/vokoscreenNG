@@ -39,6 +39,7 @@ public:
     virtual ~QvkWinInfo();
     WId getWinID();
     static WId activeWindow();
+    QRectF windowGeometryWithoutFrame( WId child);
 
 
 public slots:

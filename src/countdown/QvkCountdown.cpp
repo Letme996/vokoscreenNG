@@ -28,12 +28,10 @@
 
 QvkCountdown::QvkCountdown()
 {
-    QScreen *screen = QGuiApplication::primaryScreen();
-
+    x = 0;
+    y = 0;
     Width = 300;
     Height = 300;;
-    x = ( screen->geometry().width() / 2 ) - ( Width / 2 );
-    y = ( screen->geometry().height() / 2 ) -( Height / 2 );
 
     // Die Optionen Qt::Tool sollte nicht angewendet werden da bei Auswahl eines Fenster der Countdown nicht angezeigt wird.
     // Die Option Qt::ToolTip wäre eine möglichkeit, gefällt mir aber Optisch nicht da ein Rahmen angezeigt wird.

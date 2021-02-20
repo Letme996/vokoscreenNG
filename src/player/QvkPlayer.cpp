@@ -77,14 +77,28 @@ QvkPlayer::QvkPlayer( QMainWindow *parent, Ui_formMainWindow *ui_mainwindow ) : 
 
     ui->framePlayer->setStyleSheet( "QFrame { background-color: black; }" );
 
-    ui->pushButtonPlay->setIcon( QIcon::fromTheme( "media-playback-start" , style()->standardIcon( QStyle::SP_MediaPlay ) ) );
-    ui->pushButtonPause->setIcon( QIcon::fromTheme( "media-playback-pause", style()->standardIcon( QStyle::SP_MediaPause ) ) );
-    ui->pushButtonStop->setIcon( QIcon::fromTheme( "media-playback-stop"  , style()->standardIcon( QStyle::SP_MediaStop ) ) );
-    ui->toolButtonFrameBackward->setIcon( QIcon::fromTheme( "go-previous",  style()->standardIcon( QStyle::SP_MediaSkipBackward ) ) );
-    ui->toolButtonFrameForward->setIcon( QIcon::fromTheme( "go-next",       style()->standardIcon( QStyle::SP_MediaSkipForward ) ) );
-    ui->toolButtonOpenFile->setIcon( QIcon::fromTheme( "document-open",     style()->standardIcon( QStyle::SP_FileIcon ) ) );
-    ui->toolButtonMute->setIcon( QIcon::fromTheme( "audio-volume-high"    , style()->standardIcon( QStyle::SP_MediaVolume ) ) );
-    ui->toolButtonFullscreen->setIcon( QIcon::fromTheme( "view-fullscreen", QIcon( ":/pictures/player/fullscreen.png" ) ) );
+    QIcon iconStart( QString::fromUtf8( ":/pictures/player/start.png" ) );
+    ui->pushButtonPlay->setIcon( iconStart );
+
+    QIcon iconPause( QString::fromUtf8( ":/pictures/player/pause.png" ) );
+    ui->pushButtonPause->setIcon( iconPause );
+
+    QIcon iconStop( QString::fromUtf8( ":/pictures/player/stop.png" ) );
+    ui->pushButtonStop->setIcon( iconStop );
+
+    QIcon iconGoPrevios( QString::fromUtf8( ":/pictures/player/go-previous.png" ) );
+    ui->toolButtonFrameBackward->setIcon( iconGoPrevios );
+
+    QIcon iconGoNext( QString::fromUtf8( ":/pictures/player/go-next.png" ) );
+    ui->toolButtonFrameForward->setIcon( iconGoNext );
+
+    QIcon iconDocumentOpen( QString::fromUtf8( ":/pictures/player/document-open.png" ) );
+    ui->toolButtonOpenFile->setIcon( iconDocumentOpen );
+
+    QIcon iconAudioVolumeHigh( QString::fromUtf8( ":/pictures/player/audio-volume-high.png" ) );
+    ui->toolButtonMute->setIcon( iconAudioVolumeHigh );
+
+    ui->toolButtonFullscreen->setIcon( QIcon( ":/pictures/player/fullscreen.png" ) );
 
     mediaPlayer = new QMediaPlayer;
     sliderVolume->setValue( 70 );
@@ -100,15 +114,81 @@ QvkPlayer::QvkPlayer( QMainWindow *parent, Ui_formMainWindow *ui_mainwindow ) : 
     connect( mediaPlayer, SIGNAL( positionChanged( qint64 ) ),           this, SLOT( slot_positionChanged( qint64 ) ) );
     connect( mediaPlayer, SIGNAL( stateChanged( QMediaPlayer::State ) ), this, SLOT( slot_stateChanged( QMediaPlayer::State ) ) );
     connect( mediaPlayer, SIGNAL( volumeChanged( int ) ),                this, SLOT( slot_volumeChanged( int ) ) ); // Funktioniert nicht mit Pulse
-    connect( mediaPlayer, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
-        [=](QMediaPlayer::Error error){
-                                        Q_UNUSED(error);
-                                        QMessageBox msgBox( this );
-                                        msgBox.setText( "To play this video a codec is needed. \n Please install a codec pack." );
-                                        msgBox.setWindowTitle( global::name + " " + global::version );
-                                        msgBox.setIcon( QMessageBox::Information );
-                                        msgBox.exec();
-                                      });
+    connect( mediaPlayer, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error), [=](QMediaPlayer::Error error)
+    {
+        switch ( error )
+        {
+            case QMediaPlayer::NoError:
+            {
+               qDebug() << global::nameOutput + " " + "[Player]" + " " + "No error has occurred.";
+               break;
+            }
+            case QMediaPlayer::ResourceError:
+            {
+               qDebug() << global::nameOutput + " " + "[Player]" + " " + "To play this video a codec is needed. "
+                                                                         "Please install a codec pack.";
+               QMessageBox msgBox( this );
+               msgBox.setText( "To play this video a codec is needed.\n"
+                               "Please install a codec pack." );
+               msgBox.setWindowTitle( global::name + " " + global::version );
+               msgBox.setIcon( QMessageBox::Information );
+               msgBox.exec();
+
+               break;
+            }
+            case QMediaPlayer::FormatError:
+            {
+               qDebug() << global::nameOutput + " " + "[Player]" + " " + "The format of a media resource isn't (fully) supported. Playback may still be possible, but without an audio or video component.";
+               QMessageBox msgBox( this );
+               msgBox.setText( "The format of a media resource isn't (fully) supported.\n"
+                               "Playback may still be possible, but without an audio or video component." );
+               msgBox.setWindowTitle( global::name + " " + global::version );
+               msgBox.setIcon( QMessageBox::Information );
+               msgBox.exec();
+               break;
+            }
+            case QMediaPlayer::NetworkError:
+            {
+               qDebug() << global::nameOutput + " " + "[Player]" + " " + "A network error occurred.";
+               QMessageBox msgBox( this );
+               msgBox.setText( "A network error occurred." );
+               msgBox.setWindowTitle( global::name + " " + global::version );
+               msgBox.setIcon( QMessageBox::Information );
+               msgBox.exec();
+               break;
+            }
+            case QMediaPlayer::AccessDeniedError:
+            {
+               qDebug() << global::nameOutput + " " + "[Player]" + " " + "There are not the appropriate permissions to play a media resource.";
+               QMessageBox msgBox( this );
+               msgBox.setText( "There are not the appropriate permissions to play a media resource." );
+               msgBox.setWindowTitle( global::name + " " + global::version );
+               msgBox.setIcon( QMessageBox::Information );
+               msgBox.exec();
+               break;
+            }
+            case QMediaPlayer::ServiceMissingError:
+            {
+               qDebug() << global::nameOutput + " " + "[Player]" + " " + "A valid playback service was not found, playback cannot proceed.";
+               QMessageBox msgBox( this );
+               msgBox.setText( "A valid playback service was not found, playback cannot proceed." );
+               msgBox.setWindowTitle( global::name + " " + global::version );
+               msgBox.setIcon( QMessageBox::Information );
+               msgBox.exec();
+               break;
+            }
+            case QMediaPlayer::MediaIsPlaylist:
+            {
+               qDebug() << global::nameOutput + " " + "[Player]" + " " + "QMediaPlayer::MediaIsPlaylist";
+               QMessageBox msgBox( this );
+               msgBox.setText( "QMediaPlayer::MediaIsPlaylist" );
+               msgBox.setWindowTitle( global::name + " " + global::version );
+               msgBox.setIcon( QMessageBox::Information );
+               msgBox.exec();
+               break;
+            }
+        }
+    } );
 
     connect( sliderVideo, SIGNAL( sliderPressed() ),   this, SLOT( slot_sliderVideoPressed() ) );
     connect( sliderVideo, SIGNAL( sliderReleased() ),  this, SLOT( slot_sliderVideoReleased() ) );
@@ -148,13 +228,6 @@ QvkPlayer::QvkPlayer( QMainWindow *parent, Ui_formMainWindow *ui_mainwindow ) : 
     metaFrame->setStyleSheet( "QFrame { background-color : white; color : blue; }" );
     metaFrame->hide();
     metaLabel->hide();
-
-    QList<QWidget *> listWidget = ui->frameMenueBar->findChildren<QWidget *>();
-    for ( int i = 0; i < listWidget.count(); i++ )
-    {
-        listWidget.at(i)->setStyleSheet( "QToolTip { background-color: black; color: white }" );
-        listWidget.at(i)->setFocusPolicy( Qt::NoFocus );
-    }
 }
 
 
@@ -368,7 +441,8 @@ void QvkPlayer::slot_mutedChanged( bool muted )
 {
     if ( muted == true )
     {
-        ui->toolButtonMute->setIcon( QIcon::fromTheme( "audio-volume-muted", style()->standardIcon( QStyle::SP_MediaVolumeMuted ) ) );
+        QIcon iconAudioVolumeMuted( QString::fromUtf8( ":/pictures/player/audio-volume-muted.png" ) );
+        ui->toolButtonMute->setIcon( iconAudioVolumeMuted );
         sliderVolume->setEnabled( false );
         ui->toolButtonMute->setEnabled( true );
         return;
@@ -376,7 +450,8 @@ void QvkPlayer::slot_mutedChanged( bool muted )
 
     if ( muted == false )
     {
-        ui->toolButtonMute->setIcon( QIcon::fromTheme( "audio-volume-high", style()->standardIcon( QStyle::SP_MediaVolume ) ) );
+        QIcon iconAudioVolumeHigh( QString::fromUtf8( ":/pictures/player/audio-volume-high.png" ) );
+        ui->toolButtonMute->setIcon( iconAudioVolumeHigh);
         sliderVolume->setEnabled( true );
         ui->toolButtonMute->setEnabled( true );
         return;
@@ -471,7 +546,7 @@ void QvkPlayer::slot_setNewImage( QImage image )
     QSize ratioSize = getPixelaspectRatio();
     qreal ratio = (qreal)ratioSize.width() / (qreal)ratioSize.height();
     QScreen *screen = QGuiApplication::primaryScreen();
-    if ( ratio == 1 )
+    if ( ratio == 1.0 )
     {
         image.setDevicePixelRatio( screen->devicePixelRatio() );
         image = image.scaled( static_cast<int>( ui->framePlayer->width()*screen->devicePixelRatio() ),
@@ -485,7 +560,7 @@ void QvkPlayer::slot_setNewImage( QImage image )
     // Testvideos find in source code under /vokoscreenNG/Videos-to-test-the-player/
     // Example:
     // Area:450x800 scale:1280*720
-    if ( ( ratio != 1 ) and ( ratioSize.width() < ratioSize.height() ) )
+    if ( ( ratio != 1.0 ) and ( ratioSize.width() < ratioSize.height() ) )
     {
         // Adapt to the frame
         if ( ui->framePlayer->width() < (int)( (qreal)ui->framePlayer->height() * ( (qreal)image.width() / (qreal)image.height() * ratio ) * screen->devicePixelRatio() ) )
@@ -512,7 +587,7 @@ void QvkPlayer::slot_setNewImage( QImage image )
 
     // Example:
     // Area:800x320 scale:1280*720
-    if ( ( ratio != 1 ) and ( ratioSize.width() > ratioSize.height() ) )
+    if ( ( ratio != 1.0 ) and ( ratioSize.width() > ratioSize.height() ) )
     {
         // Adapt to the frame
         if ( ui->framePlayer->height() < (int)( (qreal)ui->framePlayer->width() * ( (qreal)image.height() / (qreal)image.width() / ratio ) * screen->devicePixelRatio() ) )
@@ -570,7 +645,7 @@ void QvkPlayer::vk_showFullscreen()
     ui->framePlayer->setStyleSheet( "QFrame { background-color: black; }"  );
     ui->widgetMenueBar->setStyleSheet( "QWidget { background-color: lightgray; }" );
     ui->labelMovePicture->setStyleSheet( "QLabel { background-color: lightgray; }" );
-    ui->toolButtonFullscreen->setIcon( QIcon::fromTheme( "view-restore", QIcon( ":/pictures/player/restore.png" ) ) );
+    ui->toolButtonFullscreen->setIcon( QIcon( ":/pictures/player/restore.png" ) );
     ui->labelMovePicture->show();
     ui->widgetMenueBar->show();
     ui->labelPlayer->setFocus();
@@ -595,7 +670,7 @@ void QvkPlayer::vk_showNormal()
     ui->framePlayer->setStyleSheet( "QFrame { background-color: black; }"  );
     // An empty string resets the color
     ui->widgetMenueBar->setStyleSheet( "" );
-    ui->toolButtonFullscreen->setIcon( QIcon::fromTheme( "view-fullscreen", QIcon( ":/pictures/player/fullscreen.png" ) ) );
+    ui->toolButtonFullscreen->setIcon( QIcon( ":/pictures/player/fullscreen.png" ) );
     ui->labelMovePicture->hide();
     ui->widgetMenueBar->show();
     ui->labelPlayer->setFocus();

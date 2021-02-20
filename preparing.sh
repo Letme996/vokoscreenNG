@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# This file is only for the main developer, so it contains a mixture of
+# German and English. It does two things:
+#
+# 1. Looks for new words to be translated and writes them to the file
+# vokoscreen-version-3.ts for later translation on Transifex.
+# 2. Downloads completed translations from Transifex and writes them to
+# screencast.qrc.
+
 # Testen ob lupdate auf dem System vorhanden ist.
 progname=$(which lupdate-qt5)
 if [ $? = 0 ]; then
@@ -69,6 +77,12 @@ echo "<qresource>" >> screencast.qrc
 array="<file>"$( find ./pictures/* -name *.png | cut -c 3- )"</file>"
 echo $array | sed "s/ /<\/file>\n<file>/g" >> screencast.qrc
 array="<file>"$( find ./pictures/* -name *.license | cut -c 3- )"</file>"
+echo $array | sed "s/ /<\/file>\n<file>/g" >> screencast.qrc
+
+#######
+# Sound
+#######
+array="<file>"$( find ./sound/* -name *.wav | cut -c 3- )"</file>"
 echo $array | sed "s/ /<\/file>\n<file>/g" >> screencast.qrc
 
 ################

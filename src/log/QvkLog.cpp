@@ -45,17 +45,6 @@ QvkLog::QvkLog( Ui_formMainWindow *ui_mainwindow )
     }
 
     logFile.setFileName( path + "/" + "log" + "/" + stringDateTime + ".log" );
-
-    // If more 30 files, remove the last.
-    QDir dir( logFolderName );
-    dir.setFilter( QDir::Files );
-    dir.setSorting( QDir::Name );
-    QList<QFileInfo> list = dir.entryInfoList();
-    if ( list.count() > 30 )
-    {
-        QFile file( list.at(0).absoluteFilePath() );
-        file.remove();
-    }
 }
 
 
@@ -87,31 +76,24 @@ void QvkLog::writeToLog( QString string )
 
 void QvkLog::outputMessage( QtMsgType type, const QMessageLogContext &context, const QString &msg )
 {
-    QString txt;
     QByteArray localMsg = msg.toLocal8Bit();
     switch (type) {
     case QtDebugMsg:
         fprintf( stderr, "%s\n", localMsg.constData() );
-        //fprintf( stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function );
-        txt += localMsg.constData();
         break;
     case QtInfoMsg:
         fprintf( stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function );
-        txt += localMsg.constData();
         break;
     case QtWarningMsg:
         fprintf( stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function );
-        txt += localMsg.constData();
         break;
     case QtCriticalMsg:
         fprintf( stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function );
-        txt += localMsg.constData();
         break;
     case QtFatalMsg:
         fprintf( stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function );
-        txt += localMsg.constData();
         abort();
     }
-    writeToLog( txt );
-    emit signal_newLogText( txt );
+    writeToLog( msg );
+    emit signal_newLogText( msg );
 }

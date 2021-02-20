@@ -1,13 +1,6 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="fr_FR" version="2.1">
 <context>
-    <name>QvkAudioPulse</name>
-    <message>
-        <source>Select one or more devices</source>
-        <translation>Sélectionnez un ou plusieurs fichiers</translation>
-    </message>
-</context>
-<context>
-    <name>QvkAudioWindows</name>
+    <name>QvkAudioController</name>
     <message>
         <source>Select one or more devices</source>
         <translation>Sélectionnez un ou plusieurs fichiers</translation>
@@ -36,6 +29,13 @@
     <message>
         <source>Countdown</source>
         <translation>Compte à rebours</translation>
+    </message>
+</context>
+<context>
+    <name>QvkDirectSoundController</name>
+    <message>
+        <source>Select one or more devices</source>
+        <translation>Sélectionnez un ou plusieurs fichiers</translation>
     </message>
 </context>
 <context>
@@ -91,14 +91,6 @@
         <translation>Veuillez installer un gestionnaire de fichiers.</translation>
     </message>
     <message>
-        <source>Desktop session is a Wayland session</source>
-        <translation>La session en cours est une session Wayland</translation>
-    </message>
-    <message>
-        <source>To time Wayland is not supported. A screencast show a black screen. Please logout and start a X11 Desktop session</source>
-        <translation>Wayland n&apos;est pas encore pris en charge. Un screencast montre un écran noir. Veuillez vous déconnecter et démarrer une session X11.</translation>
-    </message>
-    <message>
         <source>Sourcecode</source>
         <translation>Code source</translation>
     </message>
@@ -114,16 +106,19 @@
         <source>Donate</source>
         <translation>Faire un don</translation>
     </message>
-    <message>
-        <source>Wayland desktop session detected</source>
-        <translation>Session Wayland detectée</translation>
-    </message>
 </context>
 <context>
     <name>QvkPlayer</name>
     <message>
         <source>Open File</source>
         <translation>Ouvrir fichier</translation>
+    </message>
+</context>
+<context>
+    <name>QvkPulseAudioWatcher</name>
+    <message>
+        <source>Select one or more devices</source>
+        <translation>Sélectionnez un ou plusieurs fichiers</translation>
     </message>
 </context>
 <context>
@@ -177,6 +172,17 @@
     <message>
         <source>Exit</source>
         <translation>Sortir</translation>
+    </message>
+</context>
+<context>
+    <name>Qvk_wl_MainWindow</name>
+    <message>
+        <source>Wayland desktop session detected</source>
+        <translation>Session Wayland detectée</translation>
+    </message>
+    <message>
+        <source>To time Wayland is not supported. A screencast show a black screen. Please logout and start a X11 Desktop session</source>
+        <translation>Wayland n&apos;est pas encore pris en charge. Un screencast montre un écran noir. Veuillez vous déconnecter et démarrer une session X11.</translation>
     </message>
 </context>
 <context>
@@ -283,10 +289,6 @@
     <message>
         <source>Quality</source>
         <translation>Qualité</translation>
-    </message>
-    <message>
-        <source>Scale</source>
-        <translation>Échelle</translation>
     </message>
     <message>
         <source>Do not record mouse cursor</source>
@@ -517,6 +519,249 @@
     <message>
         <source>Move menu</source>
         <translation>Déplacer le menu</translation>
+    </message>
+</context>
+<context>
+    <name>wl_formMainWindow</name>
+    <message>
+        <source>Screencast</source>
+        <translation>Enregistrement de ce qui se passe à l&apos;écran</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Remettre à zéro les réglages</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation>Définir une zone manuellement</translation>
+    </message>
+    <message>
+        <source>Magnification</source>
+        <translation>Agrandissement</translation>
+    </message>
+    <message>
+        <source>Countdown</source>
+        <translation>Compte à rebours</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <source>Video size:</source>
+        <translation>Taille video:</translation>
+    </message>
+    <message>
+        <source>Free disk space:</source>
+        <translation>Espace disque libre:</translation>
+    </message>
+    <message>
+        <source>Record Time:</source>
+        <translation>Temps enregistré:</translation>
+    </message>
+    <message>
+        <source>Audiocodec</source>
+        <translation>Codec audio</translation>
+    </message>
+    <message>
+        <source>Quality</source>
+        <translation>Qualité</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>Videocodec</source>
+        <translation>Codec vidéo</translation>
+    </message>
+    <message>
+        <source>Frames</source>
+        <translation>Images</translation>
+    </message>
+    <message>
+        <source>Do not record mouse cursor</source>
+        <translation>Ne pas enregistrer le curseur de la souris</translation>
+    </message>
+    <message>
+        <source>Videopath</source>
+        <translation>Chemin d&apos;enregistrement de la vidéo</translation>
+    </message>
+    <message>
+        <source>Limit of free disk space</source>
+        <translation>Limite d&apos;espace disque libre</translation>
+    </message>
+    <message>
+        <source>Megabyte</source>
+        <translation>Megabyte</translation>
+    </message>
+    <message>
+        <source>Show in systray</source>
+        <translation>Afficher dans la zone de notification</translation>
+    </message>
+    <message>
+        <source>Minimized when recording starts</source>
+        <translation>Minimisé à l&apos;enregistrement</translation>
+    </message>
+    <message>
+        <source>Starts minimized</source>
+        <translation>Minimisé à l&apos;exécution</translation>
+    </message>
+    <message>
+        <source>Reset all settings at the next start</source>
+        <translation>Remise à zéro de tous les paramètres au prochain redémarrage du logiciel.</translation>
+    </message>
+    <message>
+        <source>Second wait before recording</source>
+        <translation>Secondes d&apos;attentes avant le début d&apos;enregistrement</translation>
+    </message>
+    <message>
+        <source>Look for updates</source>
+        <translation>Rechercher des mises à jour du logiciel</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Aide</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation>Heure</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation>Minute</translation>
+    </message>
+    <message>
+        <source>Start the timer</source>
+        <translation>Démarrer le chronomètre</translation>
+    </message>
+    <message>
+        <source>Stop recording after</source>
+        <translation>Arrêter l&apos;enregistrement après</translation>
+    </message>
+    <message>
+        <source>Hours</source>
+        <translation>Heures</translation>
+    </message>
+    <message>
+        <source>Minutes</source>
+        <translation>Minutes</translation>
+    </message>
+    <message>
+        <source>Seconds</source>
+        <translation>Secondes</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Vidéo</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation>Audio</translation>
+    </message>
+    <message>
+        <source>Available</source>
+        <translation>Disponible</translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation>Indisponible</translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation>Faire un don</translation>
+    </message>
+    <message>
+        <source>Copyright and license from pictures</source>
+        <translation>Copyright et licence de la vidéo</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F10</source>
+        <translation>CTRL+SHIFT+F10</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Démarrer</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F11</source>
+        <translation>CTRL+SHIFT+F11</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Arrêter</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F12</source>
+        <translation>CTRL+SHIFT+F12</translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation>Pause</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation>Continuer</translation>
+    </message>
+    <message>
+        <source>Play last record</source>
+        <translation>Jouer le dernier enregistrement</translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation>Lire</translation>
+    </message>
+    <message>
+        <source>Open folder</source>
+        <translation>Ouvrir dossier</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Dossier</translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation>Caméra</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F8</source>
+        <translation>CTRL+SHIFT+F8</translation>
+    </message>
+    <message>
+        <source>Flip vertical</source>
+        <translation>Retourner verticalement</translation>
+    </message>
+    <message>
+        <source>Flip horizontal</source>
+        <translation>Retourner horizontalement</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation>Inverser</translation>
+    </message>
+    <message>
+        <source>Gray</source>
+        <translation>Gris</translation>
+    </message>
+    <message>
+        <source>Black-and-white</source>
+        <translation>Noir-et-blanc</translation>
+    </message>
+    <message>
+        <source>Remove window frame</source>
+        <translation>Supprimer le cadre de la fenêtre </translation>
+    </message>
+    <message>
+        <source>Player</source>
+        <translation>Lecteur</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation>Se connecter</translation>
+    </message>
+    <message>
+        <source>Send Report</source>
+        <translation>Envoyer un Rapport</translation>
     </message>
 </context>
 </TS>

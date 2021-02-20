@@ -26,13 +26,12 @@
 *.pro.user
 *.pro.user.*
 moc_*.cpp
+moc_*.h
 qrc_*.cpp
 Makefile
 *build*
 ui_*.h
 *.qm
-vokoscreen
-main.ts
 
 # Linux/Unixes
 .*

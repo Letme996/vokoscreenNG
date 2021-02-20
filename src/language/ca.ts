@@ -1,13 +1,6 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="ca" version="2.1">
 <context>
-    <name>QvkAudioPulse</name>
-    <message>
-        <source>Select one or more devices</source>
-        <translation>Seleccioneu un o més dispositius</translation>
-    </message>
-</context>
-<context>
-    <name>QvkAudioWindows</name>
+    <name>QvkAudioController</name>
     <message>
         <source>Select one or more devices</source>
         <translation>Seleccioneu un o més dispositius</translation>
@@ -36,6 +29,13 @@
     <message>
         <source>Countdown</source>
         <translation>Compte enrere</translation>
+    </message>
+</context>
+<context>
+    <name>QvkDirectSoundController</name>
+    <message>
+        <source>Select one or more devices</source>
+        <translation>Seleccioneu un o més dispositius</translation>
     </message>
 </context>
 <context>
@@ -91,14 +91,6 @@
         <translation>Instal·leu un gestor de fitxers.</translation>
     </message>
     <message>
-        <source>Desktop session is a Wayland session</source>
-        <translation>La sessió d’escriptori és una sessió de Wayland</translation>
-    </message>
-    <message>
-        <source>To time Wayland is not supported. A screencast show a black screen. Please logout and start a X11 Desktop session</source>
-        <translation>Fins al moment no s&apos;admet el Wayland. Una captura en vídeo mostrarà una pantalla en negre. Si us plau, tanqueu la sessió i iniceu una sessió d&apos;escriptori amb X11.</translation>
-    </message>
-    <message>
         <source>Sourcecode</source>
         <translation>Codi font</translation>
     </message>
@@ -114,16 +106,19 @@
         <source>Donate</source>
         <translation>Feu una donació</translation>
     </message>
-    <message>
-        <source>Wayland desktop session detected</source>
-        <translation>S&apos;ha detectat una sessió d&apos;escriptori de Wayland</translation>
-    </message>
 </context>
 <context>
     <name>QvkPlayer</name>
     <message>
         <source>Open File</source>
         <translation>Obre el fitxer</translation>
+    </message>
+</context>
+<context>
+    <name>QvkPulseAudioWatcher</name>
+    <message>
+        <source>Select one or more devices</source>
+        <translation>Seleccioneu un o més dispositius</translation>
     </message>
 </context>
 <context>
@@ -177,6 +172,17 @@
     <message>
         <source>Exit</source>
         <translation>Surt</translation>
+    </message>
+</context>
+<context>
+    <name>Qvk_wl_MainWindow</name>
+    <message>
+        <source>Wayland desktop session detected</source>
+        <translation>S&apos;ha detectat una sessió d&apos;escriptori de Wayland</translation>
+    </message>
+    <message>
+        <source>To time Wayland is not supported. A screencast show a black screen. Please logout and start a X11 Desktop session</source>
+        <translation>Fins al moment no s&apos;admet el Wayland. Una captura en vídeo mostrarà una pantalla en negre. Si us plau, tanqueu la sessió i iniceu una sessió d&apos;escriptori amb X11.</translation>
     </message>
 </context>
 <context>
@@ -283,10 +289,6 @@
     <message>
         <source>Quality</source>
         <translation>Qualitat</translation>
-    </message>
-    <message>
-        <source>Scale</source>
-        <translation>Escala</translation>
     </message>
     <message>
         <source>Do not record mouse cursor</source>
@@ -517,6 +519,249 @@
     <message>
         <source>Move menu</source>
         <translation>Mou el menú</translation>
+    </message>
+</context>
+<context>
+    <name>wl_formMainWindow</name>
+    <message>
+        <source>Screencast</source>
+        <translation>Emissió de la pantalla</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Reinicia</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation>Àrea</translation>
+    </message>
+    <message>
+        <source>Magnification</source>
+        <translation>Ampliació</translation>
+    </message>
+    <message>
+        <source>Countdown</source>
+        <translation>Compte enrere</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Informació</translation>
+    </message>
+    <message>
+        <source>Video size:</source>
+        <translation>Mida del vídeo:</translation>
+    </message>
+    <message>
+        <source>Free disk space:</source>
+        <translation>Espai lliure al disc:</translation>
+    </message>
+    <message>
+        <source>Record Time:</source>
+        <translation>Temps enregistrat:</translation>
+    </message>
+    <message>
+        <source>Audiocodec</source>
+        <translation>Còdec de l&apos;àudio</translation>
+    </message>
+    <message>
+        <source>Quality</source>
+        <translation>Qualitat</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>Videocodec</source>
+        <translation>Còdec del vídeo</translation>
+    </message>
+    <message>
+        <source>Frames</source>
+        <translation>Fotogrames</translation>
+    </message>
+    <message>
+        <source>Do not record mouse cursor</source>
+        <translation>No enregistris el cursor del ratolí</translation>
+    </message>
+    <message>
+        <source>Videopath</source>
+        <translation>Camí del vídeo</translation>
+    </message>
+    <message>
+        <source>Limit of free disk space</source>
+        <translation>Límit d&apos;espai lliure al disc</translation>
+    </message>
+    <message>
+        <source>Megabyte</source>
+        <translation>Megabyte</translation>
+    </message>
+    <message>
+        <source>Show in systray</source>
+        <translation>Mostra a la safata del sistema</translation>
+    </message>
+    <message>
+        <source>Minimized when recording starts</source>
+        <translation>Minimitza en iniciar l&apos;enregistrament</translation>
+    </message>
+    <message>
+        <source>Starts minimized</source>
+        <translation>Inicia minimitzat</translation>
+    </message>
+    <message>
+        <source>Reset all settings at the next start</source>
+        <translation>Restableix tots els ajustament al següent inici</translation>
+    </message>
+    <message>
+        <source>Second wait before recording</source>
+        <translation>Segona espera abans d&apos;enregistrar</translation>
+    </message>
+    <message>
+        <source>Look for updates</source>
+        <translation>Comprova si hi ha actualitzacions</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ajuda</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation>Hora</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation>Minut</translation>
+    </message>
+    <message>
+        <source>Start the timer</source>
+        <translation>Inicia el temporitzador</translation>
+    </message>
+    <message>
+        <source>Stop recording after</source>
+        <translation>Atura l&apos;enregistrament després de</translation>
+    </message>
+    <message>
+        <source>Hours</source>
+        <translation>Hores</translation>
+    </message>
+    <message>
+        <source>Minutes</source>
+        <translation>Minuts</translation>
+    </message>
+    <message>
+        <source>Seconds</source>
+        <translation>Segons</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Vídeo</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation>Àudio</translation>
+    </message>
+    <message>
+        <source>Available</source>
+        <translation>Disponible</translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation>No disponible</translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation>Feu una donació</translation>
+    </message>
+    <message>
+        <source>Copyright and license from pictures</source>
+        <translation>Drets d&apos;autor i llicència de les imatges</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F10</source>
+        <translation>Ctrl+Majús.+F10</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Inicia</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F11</source>
+        <translation>Ctrl+Majús.+F11</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Atura</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F12</source>
+        <translation>Ctrl+Majús.+F12</translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation>Pausa</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation>Continua</translation>
+    </message>
+    <message>
+        <source>Play last record</source>
+        <translation>Reprodueix el darrer enregistrament</translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation>Reprodueix</translation>
+    </message>
+    <message>
+        <source>Open folder</source>
+        <translation>Obre una carpeta</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Carpeta</translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation>Càmera</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F8</source>
+        <translation>Ctrl+Majús.+F8</translation>
+    </message>
+    <message>
+        <source>Flip vertical</source>
+        <translation>Gir vertical</translation>
+    </message>
+    <message>
+        <source>Flip horizontal</source>
+        <translation>Gir horizontal</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation>Invertida</translation>
+    </message>
+    <message>
+        <source>Gray</source>
+        <translation>Gris</translation>
+    </message>
+    <message>
+        <source>Black-and-white</source>
+        <translation>Blanc i negre</translation>
+    </message>
+    <message>
+        <source>Remove window frame</source>
+        <translation>Elimina el marc de la finestra</translation>
+    </message>
+    <message>
+        <source>Player</source>
+        <translation>Reproductor</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation>Registre</translation>
+    </message>
+    <message>
+        <source>Send Report</source>
+        <translation>Envia el registre</translation>
     </message>
 </context>
 </TS>

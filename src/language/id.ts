@@ -1,13 +1,6 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="id" version="2.1">
 <context>
-    <name>QvkAudioPulse</name>
-    <message>
-        <source>Select one or more devices</source>
-        <translation>Pilih satu atau lebih perangkat</translation>
-    </message>
-</context>
-<context>
-    <name>QvkAudioWindows</name>
+    <name>QvkAudioController</name>
     <message>
         <source>Select one or more devices</source>
         <translation>Pilih satu atau lebih perangkat</translation>
@@ -36,6 +29,13 @@
     <message>
         <source>Countdown</source>
         <translation>Hitung mundur</translation>
+    </message>
+</context>
+<context>
+    <name>QvkDirectSoundController</name>
+    <message>
+        <source>Select one or more devices</source>
+        <translation>Pilih satu atau lebih perangkat</translation>
     </message>
 </context>
 <context>
@@ -91,14 +91,6 @@
         <translation>Mohon pasang sebuah manajer berkas</translation>
     </message>
     <message>
-        <source>Desktop session is a Wayland session</source>
-        <translation>Sesi desktop adalah sebuah sesi Wayland</translation>
-    </message>
-    <message>
-        <source>To time Wayland is not supported. A screencast show a black screen. Please logout and start a X11 Desktop session</source>
-        <translation>To time Wayland tidak didukung. Sebuah layar akan menampilkan layar hitam. Mohon keluar dan jalankan sesi Dekstop X11.</translation>
-    </message>
-    <message>
         <source>Sourcecode</source>
         <translation>Kode sumber</translation>
     </message>
@@ -114,16 +106,19 @@
         <source>Donate</source>
         <translation>Donasi</translation>
     </message>
-    <message>
-        <source>Wayland desktop session detected</source>
-        <translation>Sesi desktop Wayland terdeteksi</translation>
-    </message>
 </context>
 <context>
     <name>QvkPlayer</name>
     <message>
         <source>Open File</source>
         <translation>Buka Berkas</translation>
+    </message>
+</context>
+<context>
+    <name>QvkPulseAudioWatcher</name>
+    <message>
+        <source>Select one or more devices</source>
+        <translation>Pilih satu atau lebih perangkat</translation>
     </message>
 </context>
 <context>
@@ -177,6 +172,17 @@
     <message>
         <source>Exit</source>
         <translation>Keluar</translation>
+    </message>
+</context>
+<context>
+    <name>Qvk_wl_MainWindow</name>
+    <message>
+        <source>Wayland desktop session detected</source>
+        <translation>Sesi desktop Wayland terdeteksi</translation>
+    </message>
+    <message>
+        <source>To time Wayland is not supported. A screencast show a black screen. Please logout and start a X11 Desktop session</source>
+        <translation>To time Wayland tidak didukung. Sebuah layar akan menampilkan layar hitam. Mohon keluar dan jalankan sesi Dekstop X11.</translation>
     </message>
 </context>
 <context>
@@ -283,10 +289,6 @@
     <message>
         <source>Quality</source>
         <translation>Kualitas</translation>
-    </message>
-    <message>
-        <source>Scale</source>
-        <translation>Skala</translation>
     </message>
     <message>
         <source>Do not record mouse cursor</source>
@@ -517,6 +519,249 @@
     <message>
         <source>Move menu</source>
         <translation>Pindah menu</translation>
+    </message>
+</context>
+<context>
+    <name>wl_formMainWindow</name>
+    <message>
+        <source>Screencast</source>
+        <translation>RekamLayar</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Atur ulang</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation>Daerah</translation>
+    </message>
+    <message>
+        <source>Magnification</source>
+        <translation>Pembesaran</translation>
+    </message>
+    <message>
+        <source>Countdown</source>
+        <translation>Hitung mundur</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Informasi:</translation>
+    </message>
+    <message>
+        <source>Video size:</source>
+        <translation>Ukuran video:</translation>
+    </message>
+    <message>
+        <source>Free disk space:</source>
+        <translation>Ruang bebas diska:</translation>
+    </message>
+    <message>
+        <source>Record Time:</source>
+        <translation>Waktu Rekam:</translation>
+    </message>
+    <message>
+        <source>Audiocodec</source>
+        <translation>Kodekaudio</translation>
+    </message>
+    <message>
+        <source>Quality</source>
+        <translation>Kualitas</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>Videocodec</source>
+        <translation>Kodekvideo</translation>
+    </message>
+    <message>
+        <source>Frames</source>
+        <translation>Frame</translation>
+    </message>
+    <message>
+        <source>Do not record mouse cursor</source>
+        <translation>Jangan rekam kursor tetikus</translation>
+    </message>
+    <message>
+        <source>Videopath</source>
+        <translation>Jalur video</translation>
+    </message>
+    <message>
+        <source>Limit of free disk space</source>
+        <translation>Batas dari ruang bebas diska</translation>
+    </message>
+    <message>
+        <source>Megabyte</source>
+        <translation>Megabyte</translation>
+    </message>
+    <message>
+        <source>Show in systray</source>
+        <translation>Tampilkan dalam baki sistem</translation>
+    </message>
+    <message>
+        <source>Minimized when recording starts</source>
+        <translation>Kecilkan ketika rekaman dimulai</translation>
+    </message>
+    <message>
+        <source>Starts minimized</source>
+        <translation>Mulai mengecilkan</translation>
+    </message>
+    <message>
+        <source>Reset all settings at the next start</source>
+        <translation>Atur ulang semua pengaturan pada mulai berikutnya</translation>
+    </message>
+    <message>
+        <source>Second wait before recording</source>
+        <translation>Detik menunggu sebelum merekam</translation>
+    </message>
+    <message>
+        <source>Look for updates</source>
+        <translation>Memeriksa perubahan</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Bantuan</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation>Jam</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation>Menit</translation>
+    </message>
+    <message>
+        <source>Start the timer</source>
+        <translation>Mulai pengatur waktu</translation>
+    </message>
+    <message>
+        <source>Stop recording after</source>
+        <translation>Hentikan rekaman setelah</translation>
+    </message>
+    <message>
+        <source>Hours</source>
+        <translation>Jam - Jam</translation>
+    </message>
+    <message>
+        <source>Minutes</source>
+        <translation>Menit</translation>
+    </message>
+    <message>
+        <source>Seconds</source>
+        <translation>Detik</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation>Audio</translation>
+    </message>
+    <message>
+        <source>Available</source>
+        <translation>Tersedia</translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation>Tidak tersedia</translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation>Donasi</translation>
+    </message>
+    <message>
+        <source>Copyright and license from pictures</source>
+        <translation>Hak cipta dan lisensi dari gambar - gambar</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F10</source>
+        <translation>CTRL+SHIFT+F10</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Mulai</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F11</source>
+        <translation>CTRL+SHIFT+F11</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Berhenti</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F12</source>
+        <translation>CTRL+SHIFT+F12</translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation>Tangguhkan</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation>Lanjut</translation>
+    </message>
+    <message>
+        <source>Play last record</source>
+        <translation>Putar rekaman terakhir</translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation>Putar</translation>
+    </message>
+    <message>
+        <source>Open folder</source>
+        <translation>Buka folder</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Folder</translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation>Kamera</translation>
+    </message>
+    <message>
+        <source>CTRL+SHIFT+F8</source>
+        <translation>CTRL+SHIFT+F8</translation>
+    </message>
+    <message>
+        <source>Flip vertical</source>
+        <translation>Putar ke arah vertikal</translation>
+    </message>
+    <message>
+        <source>Flip horizontal</source>
+        <translation>Putar ke arah horizontal</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation>Balikan</translation>
+    </message>
+    <message>
+        <source>Gray</source>
+        <translation>Abu - abu</translation>
+    </message>
+    <message>
+        <source>Black-and-white</source>
+        <translation>Hitam-dan-putih</translation>
+    </message>
+    <message>
+        <source>Remove window frame</source>
+        <translation>Hilangkan bingkai jendela</translation>
+    </message>
+    <message>
+        <source>Player</source>
+        <translation>Pemutar</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation>CtatanLog</translation>
+    </message>
+    <message>
+        <source>Send Report</source>
+        <translation>Kirim Laporan</translation>
     </message>
 </context>
 </TS>

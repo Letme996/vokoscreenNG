@@ -119,7 +119,33 @@ void QvkSystray::init()
     show();
 
     connect( exitAction, SIGNAL( triggered( bool ) ), this, SLOT( slot_hide() ) );
+
+    connect( &version, SIGNAL( signal_newVersionAvailable( QString ) ), this, SLOT( slot_newVersionAvailable( QString ) ) );
+    connect( ui->checkBoxLookForUpdates, SIGNAL( toggled( bool ) ), &version, SLOT( slot_doDownload( bool ) ) );
 }
+
+
+void QvkSystray::slot_newVersionAvailable( QString update )
+{
+    if ( ui->checkBoxLookForUpdates->isChecked() == true )
+    {
+        if ( global::version < update )
+        {
+            if ( QSystemTrayIcon::supportsMessages() == true )
+            {
+                connect( this, SIGNAL( messageClicked() ), this, SLOT( slot_showHomepage() ) );
+                showMessage( global::name, "New Version available: " + update, QSystemTrayIcon::Information, 5000 );
+            }
+        }
+    }
+}
+
+
+void QvkSystray::slot_showHomepage()
+{
+   QDesktopServices::openUrl(QUrl("https://linuxecke.volkoh.de/vokoscreen/vokoscreen.html", QUrl::TolerantMode));
+}
+
 
 // This slot need in this class
 void QvkSystray::slot_hide()
@@ -137,14 +163,7 @@ void QvkSystray::slot_closeSystray()
 
 void QvkSystray::slot_setRecordIcon( bool )
 {
-    if ( global::VK_showOnlyFallbackIcons == true )
-    {
-        setIcon( QIcon( ":/pictures/systray/record.png" ) );
-    }
-    else
-    {
-        setIcon( QIcon::fromTheme( "media-record", QIcon( ":/pictures/systray/record.png" ) ) );
-    }
+    setIcon( QIcon( ":/pictures/systray/record.png" ) );
 }
 
 
@@ -156,5 +175,5 @@ void QvkSystray::slot_setSystrayIcon( bool )
 
 void QvkSystray::slot_setPauseIcon( bool )
 {
-    setIcon( QIcon::fromTheme( "media-playback-pause", ui->pushButtonStart->style()->standardIcon( QStyle::SP_MediaPause ) ) );
+    setIcon( QIcon( ":/pictures/systray/pause.png" ) );
 }

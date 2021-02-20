@@ -24,6 +24,9 @@
 #include "global.h"
 #include "ui_formMainWindow.h"
 
+#include <QFileInfo>
+#include <QMouseEvent>
+
 QvkSettings::QvkSettings()
 {
     // Dient nur zum anlegen des Profils damit das log erstellt werden kann
@@ -50,8 +53,6 @@ void QvkSettings::readAll( Ui_formMainWindow *ui_mainwindow, QMainWindow *parent
         }
     }
 
-    parent->move( settings.value( "MainWindow_X" ).toInt(), settings.value( "MainWindow_Y" ).toInt() );
-
     QList<QComboBox *> listComboBox = ui_mainwindow->centralWidget->findChildren<QComboBox *>();
     for ( int i = 0; i < listComboBox.count(); i++ )
     {
@@ -66,7 +67,7 @@ void QvkSettings::readAll( Ui_formMainWindow *ui_mainwindow, QMainWindow *parent
     QList<QRadioButton *> listRadiobuttons = ui_mainwindow->centralWidget->findChildren<QRadioButton *>();
     for ( int i = 0; i < listRadiobuttons.count(); i++ )
     {
-        // We have no settings-file(first start after install) but this object we want set as Standard.
+        // We have no settings-file(first start after install) but this object we want set as default.
         if ( ( listRadiobuttons.at(i)->objectName() == "radioButtonScreencastFullscreen" ) and
              ( settings.value( listRadiobuttons.at(i)->objectName(), true ).toBool() == true ) )
         {
@@ -74,9 +75,9 @@ void QvkSettings::readAll( Ui_formMainWindow *ui_mainwindow, QMainWindow *parent
             continue;
         }
 
-        // We have no settings-file(first start after install) but this object we want set as Standard.
-        if ( ( listRadiobuttons.at(i)->objectName() == "radioButtonScreenshotFullscreen" ) and
-             ( settings.value( listRadiobuttons.at(i)->objectName(), true ).toBool() == true ) )
+        // We set WASAPI as default
+        if ( ( listRadiobuttons.at(i)->objectName() == "radioButtonDirectSound" ) and
+             ( settings.value( listRadiobuttons.at(i)->objectName(), false ).toBool() == false ) )
         {
             listRadiobuttons.at(i)->click();
             continue;
@@ -92,7 +93,7 @@ void QvkSettings::readAll( Ui_formMainWindow *ui_mainwindow, QMainWindow *parent
     QList<QCheckBox *> listCheckBox = ui_mainwindow->centralWidget->findChildren<QCheckBox *>();
     for ( int i = 0; i < listCheckBox.count(); i++ )
     {
-        // We have no settings-file(first start after install) but this object we want set as Standard.
+        // We have no settings-file(first start after install) but this object we want set as default.
         if ( ( listCheckBox.at(i)->objectName() == "checkBoxShowInSystray" ) and
              ( settings.value( listCheckBox.at(i)->objectName(), true ).toBool() == true ) )
         {
@@ -108,13 +109,6 @@ void QvkSettings::readAll( Ui_formMainWindow *ui_mainwindow, QMainWindow *parent
             continue;
         }
 
-        if ( ( listCheckBox.at(i)->objectName().contains( "checkboxAudioDevice" ) ) and
-             ( settings.value( listCheckBox.at(i)->objectName(), false ).toBool() == true ) )
-        {
-            listCheckBox.at(i)->click();
-            continue;
-        }
-
         if ( ( listCheckBox.at(i)->objectName().contains( "checkBoxLookForUpdates" ) ) and
              ( settings.value( listCheckBox.at(i)->objectName(), true ).toBool() == true ) )
         {
@@ -124,6 +118,13 @@ void QvkSettings::readAll( Ui_formMainWindow *ui_mainwindow, QMainWindow *parent
 
         if ( ( listCheckBox.at(i)->objectName().contains( "checkBoxShowInSystrayAlternative" ) ) and
              ( settings.value( listCheckBox.at(i)->objectName(), true ).toBool() == true ) )
+        {
+            listCheckBox.at(i)->click();
+            continue;
+        }
+
+        if ( ( listCheckBox.at(i)->objectName().contains( "checkboxAudioDevice-" ) ) and
+             ( settings.value( listCheckBox.at(i)->objectName(), false ).toBool() == true ) )
         {
             listCheckBox.at(i)->click();
             continue;
@@ -287,7 +288,14 @@ void QvkSettings::saveAll(Ui_formMainWindow *ui_mainwindow , QMainWindow *parent
     {
         if ( listToolButton.at(i)->objectName().contains( "toolButtonMute" ) )
         {
-            settings.setValue( listToolButton.at(i)->objectName(), listToolButton.at(i)->icon().name() );
+            if ( listToolButton.at(i)->isChecked() == true )
+            {
+                settings.setValue( listToolButton.at(i)->objectName(), "audio-volume-muted" );
+            }
+            else
+            {
+                settings.setValue( listToolButton.at(i)->objectName(), "audio-volume-high" );
+            }
         }
     }
 }
@@ -298,6 +306,11 @@ QString QvkSettings::getFileName()
     return settings.fileName();
 }
 
+QString QvkSettings::getVideoPath()
+{
+    QSettings settings( QSettings::IniFormat, QSettings::UserScope, global::name, global::name, Q_NULLPTR );
+    return settings.value( "lineEditVideoPath" ).toString();
+}
 
 void QvkSettings::saveAreaScreencast( qreal x, qreal y, qreal width, qreal height  )
 {

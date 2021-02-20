@@ -28,6 +28,7 @@
 #include <QLabel>
 #include <QDir>
 #include <QTextDocument>
+#include <QSettings>
 
 /*
  * The remote HTML-file and the toolbutton have the same name.
@@ -62,7 +63,7 @@ QvkHelp::QvkHelp(QMainWindow *mainWindow, Ui_formMainWindow *ui_mainwindow ) : u
     setWindowIcon( icon );
 
     QStringList helpStringList;
-    helpStringList << "http:/"
+    helpStringList << "https:/"
                    << "vokoscreen.volkoh.de"
                    << "3.0"
                    << "help";
@@ -75,7 +76,7 @@ QvkHelp::QvkHelp(QMainWindow *mainWindow, Ui_formMainWindow *ui_mainwindow ) : u
     vkDownloadHTML = new QvkDownloader( temporaryDirLocal.path() );
     vkDownloadFiles = new QvkDownloader( temporaryDirLocal.path() );
 
-    QIcon iconHelp = style()->standardIcon( QStyle::SP_MessageBoxInformation );
+    QIcon iconHelp( ":/pictures/help/information.png" );
     QList<QToolButton *> listToolButton = ui->centralWidget->findChildren<QToolButton *>();
     for ( int i = 0; i < listToolButton.count(); i++ )
     {
@@ -95,16 +96,19 @@ QvkHelp::~QvkHelp()
 
 void QvkHelp::slot_parse_locale( QStringList list )
 {
-    QString language;
-    if ( list.contains( QLocale::system().name() ) )
+    for ( int i = 0; i < list.count(); i++  )
     {
-        language = QLocale::system().name();
+       QLocale locale( list.at( i ) );
+       ui->comboBoxOnlineHelp->addItem( locale.nativeLanguageName() + " " + "(" + list.at(i) + ")", list.at( i ) );
     }
-    else
+
+    QSettings settings( QSettings::IniFormat, QSettings::UserScope, global::name, global::name, Q_NULLPTR );
+    QString valueText = settings.value( ui->comboBoxOnlineHelp->objectName(), "" ).toString();
+    int valueInt = ui->comboBoxOnlineHelp->findText( valueText );
+    if ( valueInt > -1 )
     {
-        language = "en";
+        ui->comboBoxOnlineHelp->setCurrentIndex( valueInt );
     }
-    vk_helpPath = vk_helpPath + language + "/";
 }
 
 
@@ -133,11 +137,40 @@ bool QvkHelp::eventFilter(QObject *object, QEvent *event)
 {
     QToolButton *toolButton = qobject_cast<QToolButton *>(object);
 
-    if ( ( event->type() == QEvent::MouseButtonRelease ) and ( toolButton->isEnabled() == true ) )
+    // Automatic language detection is set in combobox for the online help.
+    if ( ( event->type() == QEvent::MouseButtonRelease ) and
+         ( toolButton->isEnabled() == true ) and
+         ( ui->comboBoxOnlineHelp->currentIndex() == 0 ) )
     {
-       loadHTML( vk_helpPath + object->objectName().section( "_", 1, 1 ) + "/" + object->objectName() + ".html" );
-       uiHelp->labelURL->setText( vk_helpPath + object->objectName().section( "_", 1, 1 ) + "/" + object->objectName() + ".html" );
-       return false;
+
+        QString language;
+        if ( ui->comboBoxOnlineHelp->findText( "(" + QLocale::system().name() + ")", Qt::MatchEndsWith ) > -1 )
+        {
+            language = QLocale::system().name();
+        }
+        else
+        {
+            language = "en";
+        }
+
+        QString vk_helpPath_locale = vk_helpPath + language + "/";
+
+        loadHTML( vk_helpPath_locale + object->objectName().section( "_", 1, 1 ) + "/" + object->objectName() + ".html" );
+        uiHelp->labelURL->setText( vk_helpPath_locale + object->objectName().section( "_", 1, 1 ) + "/" + object->objectName() + ".html" );
+
+        return false;
+    }
+
+    // Selected Language is set in combobox
+    if ( ( event->type() == QEvent::MouseButtonRelease ) and
+         ( toolButton->isEnabled() == true ) and
+         ( ui->comboBoxOnlineHelp->currentIndex() > 0 ) )
+    {
+        QString language = ui->comboBoxOnlineHelp->currentText().section( "(", 1 ).replace( ")", "" );
+        QString vk_helpPath_locale = vk_helpPath + language + "/";
+        loadHTML( vk_helpPath_locale + object->objectName().section( "_", 1, 1 ) + "/" + object->objectName() + ".html" );
+        uiHelp->labelURL->setText( vk_helpPath_locale + object->objectName().section( "_", 1, 1 ) + "/" + object->objectName() + ".html" );
+        return false;
     }
     else
     {
@@ -190,7 +223,8 @@ int QvkHelp::getCountFileToDownload( QString tempPathFileName )
     QFile file( tempPathFileName );
     if( !file.open( QIODevice::ReadOnly ) )
     {
-        QMessageBox::information( nullptr, "Help error", "QvkHelp::getCountFileToDownload\n" + tempPathFileName + "\n" + file.errorString() );
+        qDebug().noquote() << global::nameOutput << "QvkHelp::getCountFileToDownload" << tempPathFileName  << file.errorString();
+        //QMessageBox::information( nullptr, "Help error", "QvkHelp::getCountFileToDownload\n" + tempPathFileName + "\n" + file.errorString() );
     }
 
     int count = 0;
@@ -223,7 +257,7 @@ void QvkHelp::slot_parseHTML( QString tempPathFileName )
     if( !file.open( QIODevice::ReadOnly ) )
     {
         qDebug().noquote() << global::nameOutput << "QvkHelp::slot_parseHTML" << tempPathFileName  << file.errorString();
-        QMessageBox::information( nullptr, global::name + " " + global::version, "QvkHelp::slot_parseHTML\n" + tempPathFileName + "\n" + file.errorString() );
+        //QMessageBox::information( nullptr, global::name + " " + global::version, "QvkHelp::slot_parseHTML\n" + tempPathFileName + "\n" + file.errorString() );
         return;
     }
 
@@ -272,11 +306,11 @@ void QvkHelp::slot_showHelp( QString tempPathFileName )
     QFile file( htmlFile );
     if( !file.open( QIODevice::ReadOnly ) )
     {
-        QMessageBox::information( nullptr, "Help error", "QvkHelp::slot_showHelp\n" + tempPathFileName + "\n" + file.errorString() );
+        qDebug().noquote() << global::nameOutput << "QvkHelp::slot_showHelp" << tempPathFileName  << file.errorString();
+        //QMessageBox::information( nullptr, "Help error", "QvkHelp::slot_showHelp\n" + tempPathFileName + "\n" + file.errorString() );
     }
 
-    QTextStream textStream( &file );
-    QString value = textStream.readAll();
+    QString value = QString::fromUtf8( file.readAll() );
 
     // Antialiasing for Font
     QFont font = uiHelp->textBrowser->font();

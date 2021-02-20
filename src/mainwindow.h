@@ -35,18 +35,12 @@
 #include "QvkTheme.h"
 #include "QvkLimitDiskFreeSpace.h"
 #include "QvkSpezialSlider.h"
-#include "QvkVersion.h"
 #include "QvkSystrayAlternative.h"
-
-#ifdef Q_OS_LINUX
-#include "QvkAudioPulse.h"
-#endif
-#ifdef Q_OS_WIN
-#include "QvkAudioWindows.h"
-#endif
+#include "QvkAudioController.h"
 
 #include <QMainWindow>
 #include <QFileSystemWatcher>
+#include <QSoundEffect>
 
 #include <gst/gst.h>
 
@@ -67,7 +61,7 @@ public:
     QvkRegionChoise *vkRegionChoise;
     QvkHelp *vkHelp;
     QvkSystray *vkSystray;
-
+    QvkAudioController *vkAudioController;
 
 private:
     QvkSpezialSlider *sliderScreencastCountDown;
@@ -84,7 +78,6 @@ private:
     QvkSpezialSlider *sliderStopRecordingAfterSeconds;
 
     QvkSettings vkSettings;
-    QStringList resolutionStringList;
 
     const QString VK_Gstr_Pipe = " ! ";
     QString VK_GStreamer_Version();
@@ -92,7 +85,7 @@ private:
     QString VK_getCapsFilter();
     QString VK_getMuxer();
     QString Vk_get_Videocodec_Encoder();
-    QString VK_getVideoScale();
+    QString VK_scale();
 
     QFileSystemWatcher *videoFileSystemWatcher;
 
@@ -135,11 +128,10 @@ private:
     void checkVideoPath();
 
     bool isAudioDeviceSelected();
-    QvkVersion version;
 
     QString Pipeline_structured_output( QString pipeline );
 
-    bool onlyOnce = false;
+    QSoundEffect *soundEffect;
 
 
 private slots:
@@ -152,25 +144,23 @@ private slots:
     void slot_Play();
     void slot_Folder();
     void slot_screenCountChanged( QString, QString );
-    void slot_audioIconOnOff(bool state );
-    void slot_audioRedCross();
+    void slot_screenCountChangedArea( QString stringText, QString stringData );
     void slot_newVideoPath();
     void slot_videoFileSystemWatcherSetButtons();
     void slot_videoFileSystemWatcherSetNewPath();
     void slot_startCounter( bool value );
+    void slot_comboBoxScreencastScreenCountdown( bool );
 
     void slot_set_available_VideoCodecs_in_Combox( QString suffix );
     void slot_set_available_AudioCodecs_in_Combox( QString suffix );
     void slot_videoCodecChanged( QString codec );
+    void slot_framesReset();
     void slot_x264Reset();
     void slot_openh264Reset();
 
     void slot_StartTimer( bool value );
     void slot_startTime();
     void slot_areaSetResolution( QString value );
-    void slot_areaReset();
-    void slot_disableAreaWidgets();
-    void slot_enableAreaWidgets();
 
     void slot_IfStartAudioCodecWidgetsSetEnabled();
     void slot_IfStopAudioCodecWidgetsSetDisabled();
@@ -181,9 +171,7 @@ private slots:
 
     void slot_vokoPlayer();
 
-    void slot_newVersionAvailable(QString update);
-
-    void slot_afterWindowShown();
+    void slot_setMaxFPS( int );
 
 
 signals:
@@ -196,9 +184,6 @@ signals:
 protected:
     void closeEvent( QCloseEvent *event );
     void resizeEvent( QResizeEvent *event );
-#ifdef Q_OS_LINUX
-    void showEvent( QShowEvent *event );
-#endif
 
 
 };

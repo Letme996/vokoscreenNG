@@ -22,9 +22,16 @@
 
 #include "mainwindow.h"
 #include "global.h"
+#ifdef Q_OS_LINUX
+#include "wl_mainwindow.h"
+#endif
 
 #include <QTranslator>
 #include <QLibraryInfo>
+
+#ifdef Q_OS_LINUX
+#include <QX11Info>
+#endif
 
 #include <gst/gst.h>
 
@@ -35,21 +42,34 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
+    QString help;
+    help.append( "\n" );
+    help.append( "Usage: " + global::name + " [Option] [File or URL]" + "\n" );
+    help.append( "\n" );
+    help.append( "Options: \n" );
+    help.append( "  -h or --help        Print this message\n" );
+    help.append( "  -v or --version     Print version \n" );
+    help.append( "\n" );
+    help.append( "File or Url:\n" );
+    help.append( "  Play a video\n" );
+    help.append( "    Example file:\n" );
+    help.append( "      vokoscreenNG /path/video\n" );
+    help.append( "\n" );
+    help.append( "    Exsample URL:\n");
+    help.append( "      vokoscreenNG http://www.rapconverter.com/SampleDownload/Sample320.mp4\n");
+    help.append( "      vokoscreenNG http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4" );
+    help.append( "\n" );
+
     QStringList arguments = QApplication::instance()->arguments();
     if ( !arguments.empty() and ( arguments.count() == 2 ) )
     {
         QStringList arguments = QApplication::instance()->arguments();
         if ( ( arguments.at(1) == "--help" ) or
              ( arguments.at(1) == "-h"     ) )
-            {
-                qDebug(" ");
-                qDebug().noquote() << "Usage:" << global::name << "[Option] [File or URL]";
-                qDebug(" ");
-                qDebug().noquote() << "Options:";
-                qDebug().noquote() << "  -h or --help        Print this message";
-                qDebug().noquote() << "  -v or --version     Print" << global::name << "version";
-                return 0;
-            }
+        {
+            qDebug().resetFormat().noquote() << help;
+            return 0;
+        }
 
         if ( ( arguments.at(1) == "--version" ) or ( arguments.at(1) == "-v" ) )
         {
@@ -57,18 +77,32 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        // If call from terminal and local file not exists
+        // If call from terminal and local file or remote file not exists
         QFile file( arguments.at(1) );
         if ( ( file.exists() == false ) and
              ( arguments.at(1).contains( "http://" ) == false ) and
              ( arguments.at(1).contains( "https://" ) == false ) )
         {
             qDebug().noquote() << global::nameOutput << arguments.at(1) << "file not exists";
+            qDebug().resetFormat().noquote() << help;
+            qDebug( " " );
             return 1;
         }
     }
 
     // Initialize GStreamer
+    // https://developer.gnome.org/gstreamer/stable/gst-running.html
+#ifdef Q_OS_WIN
+    QString pathString = QDir::currentPath();
+    QByteArray pathByteArray;
+    pathByteArray.append( pathString );
+    qputenv( "GSTREAMER_1_0_ROOT_X86", pathByteArray );
+    qputenv( "GST_PLUGIN_PATH", pathByteArray );
+    
+    //Environment variables for debugging
+    //qputenv( "GST_DEBUG", "2");
+    //qputenv( "GST_DEBUG_FILE", "C:\\Users\\vk\\Documents\\VK_Error.txt" );
+#endif
     gst_init (&argc, &argv);
 
     QTranslator * qtTranslator = new QTranslator();
@@ -79,8 +113,28 @@ int main(int argc, char *argv[])
     translator.load( QLocale::system().name(), ":/language" );
     app.installTranslator( &translator );
 
-    QvkMainWindow w;
-    w.show();
+    QvkMainWindow *w;
+
+#ifdef Q_OS_LINUX
+    Qvk_wl_MainWindow *wl;
+
+    if ( qgetenv( "XDG_SESSION_TYPE" ).toLower() == "x11" )
+    {
+        w = new QvkMainWindow;
+        w->show();
+    }
+    
+    if ( qgetenv( "XDG_SESSION_TYPE" ).toLower() == "wayland" )
+    {
+        wl = new Qvk_wl_MainWindow;
+        wl->show();
+    }
+#endif
+
+#ifdef Q_OS_WIN
+    w = new QvkMainWindow;
+    w->show();
+#endif
 
     return app.exec();
 }

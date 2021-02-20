@@ -31,10 +31,10 @@ QvkLocale::QvkLocale()
     vkDownload = new QvkDownloader( temporaryDirLocal.path() );
     connect( vkDownload, SIGNAL( signal_fileDownloaded( QString ) ), this, SLOT( slot_parse( QString ) ) );
 #ifdef Q_OS_LINUX
-    vkDownload->doDownload( QUrl( "http://vokoscreen.volkoh.de/3.0/help/getLinuxDirs.php" ) );
+    vkDownload->doDownload( QUrl( "https://vokoscreen.volkoh.de/3.0/help/getLinuxDirs.php" ) );
 #endif
 #ifdef Q_OS_WIN
-    vkDownload->doDownload( QUrl( "http://vokoscreen.volkoh.de/3.0/help/getWindowsDirs.php" ) );
+    vkDownload->doDownload( QUrl( "https://vokoscreen.volkoh.de/3.0/help/getWindowsDirs.php" ) );
 #endif
 
 }
@@ -50,7 +50,7 @@ void QvkLocale::slot_parse( QString tempPathFileName )
     QFile file( tempPathFileName );
     if( !file.open( QIODevice::ReadOnly ) )
     {
-        QMessageBox::information( nullptr, "Locale error", "QvkLocale::slot_parse\n" + tempPathFileName + "\n" + file.errorString() );
+        return;
     }
 
     QTextStream textStream( &file );
